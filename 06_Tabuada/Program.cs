@@ -6,18 +6,26 @@ namespace _06_Tabuada
     {
         static void Main(string[] args)
         {
-            int n;
+            int multiplicando = 0, produto;
+            bool digitacaoValida = false;
 
-            Console.Write("Digite um número para ver sua tabuada: ");
-            n = int.Parse(Console.ReadLine());
-
-            Console.WriteLine($"Tabuada do {n}:");
-
-            for (int i = 1; i <= 10; i++)
+            // ! negação: inverte o valor booleano
+            //!false = true 
+            //!true = false
+            //while (!digitacaoValida == false)
+            while (!digitacaoValida)
             {
-              
-                int resultado = n * i; 
-                Console.WriteLine($"{n} x {i} = {resultado}");
+                Console.WriteLine("Digite um número inteiro: ");
+                digitacaoValida = int.TryParse(Console.ReadLine(), out multiplicando);
+            }
+
+            Console.WriteLine($"TABUADA DO {multiplicando}");
+            for (int multiplicador= 1; multiplicador <= 10; multiplicador++)
+            {
+                produto = multiplicando * multiplicador;
+                // Console.WriteLine($"{0} x {1} = {2}", multiplicando, multiplicador, produto);
+                // Interpolação de string $
+                Console.WriteLine($"{multiplicando} x {multiplicador} = {produto}");
             }
         }
     }

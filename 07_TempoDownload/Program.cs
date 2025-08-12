@@ -1,6 +1,4 @@
 ﻿using System;
-
-
 class Program
 {
     static void Main()
@@ -36,5 +34,36 @@ class Program
         {
             Console.WriteLine("Valor inválido! Digite um número maior que zero.");
         }
+
+        /*
+         double tamanhoMB= 0;
+        double velocidadeMbps = 0;  
+        double tempoSegundos, tempoMinutos;
+
+        loop infinito 
+        while (true)
+        Console.ReadLine(Informe o tamanho do arquivo em MB: );
+        if (double.TryParse(Console.ReadLine(), out tamanhoMB) && tamanhoMB > 0)
+
+        sai do loop 
+        break;
+        else
+        Console.WriteLine("Valor inválido! Digite um número maior que zero.");
+
+        while (true)
+        Console.ReadLine(Informe a velocidade da internet em Mbps: );
+        if (double.TryParse(Console.ReadLine(), out velocidadeMbps) && velocidadeMbps > 0)
+        sai do loop
+        break;
+        else
+        Console.WriteLine("Valor inválido! Digite um número maior que zero.");
+        
+        // Cálculo do tempo de download
+        tempoSegundos = (tamanhoMB * 8) / velocidadeMbps;
+        tempoMinutos = tempoSegundos / 60;
+        
+        // Exibe o resultado
+        Console.WriteLine($"Tempo aproximado de download: {tempoMinutos:F2} minutos");
+         */
     }
 }

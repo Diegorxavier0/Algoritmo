@@ -119,6 +119,7 @@ namespace _09_Calendario
             if (pascoa.Month == mes) feriados[indice++] = pascoa.Day;
             if (corpusChristi.Month == mes) feriados[indice++] = corpusChristi.Day;
 
+            Array.Sort(feriados);//organiza em ordem crescente as datas
             return feriados;
         }
 

@@ -8,18 +8,40 @@ namespace _09_Calendario
     {
         static void Main(string[] args)
         {
-            Console.Write("Digite o mês (1-12): ");
-            int mes = int.Parse(Console.ReadLine());
-
-            if (mes < 1 || mes > 12)
-            {
-                Console.WriteLine("Mês inválido. Digite um valor entre 1 e 12.");
-                return;
-            }
-
             Console.Write("Digite o ano: ");
             int ano = int.Parse(Console.ReadLine());
 
+            // CALCULA OS FERIADOS MÓVEIS UMA ÚNICA VEZ
+            DateTime pascoa = DomingoDePascoa(ano);
+            DateTime carnaval = pascoa.AddDays(-47);
+            DateTime sextaSanta = pascoa.AddDays(-2);
+            DateTime corpusChristi = pascoa.AddDays(60);
+
+            Console.WriteLine($"\nFeriados móveis do ano {ano}:");
+            Console.WriteLine($"Carnaval: {carnaval:dd/MM/yyyy}");
+            Console.WriteLine($"Sexta-feira Santa: {sextaSanta:dd/MM/yyyy}");
+            Console.WriteLine($"Páscoa: {pascoa:dd/MM/yyyy}");
+            Console.WriteLine($"Corpus Christi: {corpusChristi:dd/MM/yyyy}");
+            Console.WriteLine(new string('-', 40));
+
+            // percorre todos os meses
+            for (int mes = 1; mes <= 12; mes++)
+            {
+                int[,] calendario = GerarCalendario(mes, ano);
+                int[] diasFeriados = RetornaFeriados(mes, ano, carnaval, sextaSanta, pascoa, corpusChristi);
+
+                ImprimirCalendario(mes, ano, calendario, diasFeriados);
+                Console.WriteLine(new string('_', 30)); // separador entre meses
+               
+            }
+
+            Console.ReadKey();
+        }
+
+        // =================== NOVOS MÉTODOS ===================
+
+        static int[,] GerarCalendario(int mes, int ano)
+        {
             int diasDoMes = DateTime.DaysInMonth(ano, mes);
             DateTime primeiroDiaMes = new DateTime(ano, mes, 1);
             int diaSemanaInicio = (int)primeiroDiaMes.DayOfWeek;
@@ -40,10 +62,15 @@ namespace _09_Calendario
                 }
             }
 
+            return calendario;
+        }
+
+        static void ImprimirCalendario(int mes, int ano, int[,] calendario, int[] diasFeriados)
+        {
+            DateTime primeiroDiaMes = new DateTime(ano, mes, 1);
+
             Console.WriteLine($"\nCalendário {primeiroDiaMes.ToString("MMMM")} de {ano}");
             Console.WriteLine("DOM SEG TER QUA QUI SEX SAB");
-
-            int[] diasFeriados = RetornaFeriados(mes, ano);
 
             for (int semana = 0; semana < 6; semana++)
             {
@@ -65,61 +92,37 @@ namespace _09_Calendario
                 Console.WriteLine();
             }
 
-            Console.Write("\nFeriados: ");
+            Console.Write("Feriados: ");
             foreach (int f in diasFeriados)
             {
                 if (f != 0)
                     Console.Write($"{f} ");
             }
-
-            Console.WriteLine("\n* Dias em vermelho são domingos ou feriados.");
-            Console.ReadKey();
+            Console.WriteLine("\n");
         }
 
-        public static int[] RetornaFeriados(int mes, int ano)
+        // =================== RESTO DO CÓDIGO ===================
+
+        public static int[] RetornaFeriados(int mes, int ano, DateTime carnaval, DateTime sextaSanta, DateTime pascoa, DateTime corpusChristi)
         {
             int[] feriados = new int[15];
             int indice = 0;
 
             if (mes == 1) feriados[indice++] = 1;
-            else if (mes == 4)
-            {
-                feriados[indice++] = 21;
-                feriados[indice++] = 4;
-            }
+            else if (mes == 4) { feriados[indice++] = 21; feriados[indice++] = 4; }
             else if (mes == 5) feriados[indice++] = 1;
             else if (mes == 7) feriados[indice++] = 9;
             else if (mes == 9) feriados[indice++] = 7;
             else if (mes == 10) feriados[indice++] = 12;
-            else if (mes == 11)
-            {
-                feriados[indice++] = 2;
-                feriados[indice++] = 15;
-                feriados[indice++] = 20;
-            }
-            else if (mes == 12)
-            {
-                feriados[indice++] = 8;
-                feriados[indice++] = 25;
-            }
-
-            DateTime pascoa = DomingoDePascoa(ano);
-            DateTime carnaval = pascoa.AddDays(-47);
-            DateTime sextaSanta = pascoa.AddDays(-2);
-            DateTime corpusChristi = pascoa.AddDays(60);
-
-            Console.WriteLine($"\nFeriados móveis do ano {ano}:");
-            Console.WriteLine($"Carnaval: {carnaval:dd/MM/yyyy}");
-            Console.WriteLine($"Sexta-feira Santa: {sextaSanta:dd/MM/yyyy}");
-            Console.WriteLine($"Páscoa: {pascoa:dd/MM/yyyy}");
-            Console.WriteLine($"Corpus Christi: {corpusChristi:dd/MM/yyyy}");
+            else if (mes == 11) { feriados[indice++] = 2; feriados[indice++] = 15; feriados[indice++] = 20; }
+            else if (mes == 12) { feriados[indice++] = 8; feriados[indice++] = 25; }
 
             if (carnaval.Month == mes) feriados[indice++] = carnaval.Day;
             if (sextaSanta.Month == mes) feriados[indice++] = sextaSanta.Day;
             if (pascoa.Month == mes) feriados[indice++] = pascoa.Day;
             if (corpusChristi.Month == mes) feriados[indice++] = corpusChristi.Day;
 
-            Array.Sort(feriados);//organiza em ordem crescente as datas
+            Array.Sort(feriados);
             return feriados;
         }
 
@@ -141,16 +144,8 @@ namespace _09_Calendario
             int g = (2 * b + 4 * c + 6 * d + Y) % 7;
 
             int dia, mes;
-            if ((d + g) > 9)
-            {
-                dia = d + g - 9;
-                mes = 4;
-            }
-            else
-            {
-                dia = d + g + 22;
-                mes = 3;
-            }
+            if ((d + g) > 9) { dia = d + g - 9; mes = 4; }
+            else { dia = d + g + 22; mes = 3; }
 
             return new DateTime(Ano, mes, dia);
         }
